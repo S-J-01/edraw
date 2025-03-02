@@ -14,14 +14,15 @@ const signupProp = z.object({
 })
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET ?? 'default_secret'
-//@ts-ignore
+
 app.post('/signup',(req:Request,res:Response)=>{
 
     //logic for user signup
     const parsedInput = signupProp.safeParse(req.body);
 
     if(!parsedInput.success){
-        return res.status(400).json({message:parsedInput.error})
+       res.status(400).json({message:parsedInput.error});
+       return;
     }
    const newUser={
     username: parsedInput.data.username,
@@ -35,12 +36,13 @@ app.post('/signup',(req:Request,res:Response)=>{
    res.status(201).json({message:'Signup successful', token:accessToken})
     
 });
-//@ts-ignore
+
 app.post('/login',(req:Request,res:Response)=>{
     //login code
     const parsedInput = signupProp.safeParse(req.body)
     if(!parsedInput.success){
-        return res.status(400).json({message:parsedInput.error})
+        res.status(400).json({message:parsedInput.error});
+        return;
     }
     const loggedInUser = {
         username: parsedInput.data.username,

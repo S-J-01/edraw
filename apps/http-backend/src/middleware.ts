@@ -9,15 +9,14 @@ export default function middleware(req:Request,res:Response,next:NextFunction){
     const token = authHeader && authHeader.split(' ')[1]
     
     if(token){
-        jwt.verify(token,accessTokenSecret,(err,username)=>{
-            if(err){
-                res.status(401).json({message:'token not valid'})
-            }else{
-                //@ts-ignore
-                req.username =username;
-                next();
-            }
-        })
+        try{
+            const decoded = jwt.verify(token,accessTokenSecret);
+            //@ts-ignore
+            req.username = decoded.User;
+            next();
+        }catch(err){
+            res.status(401).json({message:'token not valid'})
+        }
     }else{
         res.status(401).json({message:'auth header empty'})
     }
