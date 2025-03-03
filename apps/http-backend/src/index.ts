@@ -58,7 +58,7 @@ app.post('/login',(req:Request,res:Response)=>{
 })
 app.post('/create-room',middleware,(req:Request,res:Response)=>{
     //logic to create room
-    //@ts-ignore
+    
     res.status(200).json({message:'middleware passed',user:req.username})
 })
 app.listen(3001);

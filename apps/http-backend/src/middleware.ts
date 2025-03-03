@@ -10,8 +10,8 @@ export default function middleware(req:Request,res:Response,next:NextFunction){
     
     if(token){
         try{
-            const decoded = jwt.verify(token,accessTokenSecret);
-            //@ts-ignore
+            const decoded = jwt.verify(token,accessTokenSecret) as CustomPayload;
+            
             req.username = decoded.User;
             next();
         }catch(err){
