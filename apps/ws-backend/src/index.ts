@@ -15,10 +15,20 @@ if(!url){
 }
 const queryParameters = new URLSearchParams(url.split('?')[1]);
 const token = queryParameters.get('token') ?? 'default_token';
-const decoded = jwt.verify(token,accessTokenSecret) as CustomPayload
 
-if(!decoded || !decoded.User){
-  console.log('token invalid')
+let decoded:CustomPayload;
+try{
+  decoded = jwt.verify(token,accessTokenSecret) as CustomPayload
+}catch(err){
+  console.log('token cant be verified');
+  ws.close();
+  return;
+}
+
+
+
+if(!decoded.User){
+  console.log('decoded token does not contain Username')
   ws.close()
   return
 }
