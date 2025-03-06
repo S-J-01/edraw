@@ -1,19 +1,19 @@
 import express, {Request,Response} from "express";
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import {z} from 'zod';
+import {signupProp} from "@repo/common/zodSchema";
 import middleware from "./middleware";
 dotenv.config();
+import {accessTokenSecret} from "@repo/backend-common/config";
+
 const app = express();
 app.use(express.json())
 
+console.log(accessTokenSecret)
 
-const signupProp = z.object({
-    username : z.string().min(1).max(50),
-    password: z.string().min(1).max(50)
-})
 
-const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET ?? 'default_secret'
+
+
 
 app.post('/signup',(req:Request,res:Response)=>{
 
@@ -21,6 +21,7 @@ app.post('/signup',(req:Request,res:Response)=>{
     const parsedInput = signupProp.safeParse(req.body);
 
     if(!parsedInput.success){
+        console.log('wrong input type')
        res.status(400).json({message:parsedInput.error});
        return;
     }

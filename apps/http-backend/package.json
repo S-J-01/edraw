@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@repo/typescript-config": "workspace:*",
+    "@repo/common":"workspace:*",
+    "@repo/backend-common":"workspace:*",
     "@types/express": "^5.0.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
@@ -23,5 +25,6 @@
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.9",
     "ts-node": "^10.9.2"
+   
   }
 }
