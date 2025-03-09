@@ -9,23 +9,24 @@
     "dev": "ts-node  --files src/index.ts"
   },
   "dependencies": {
+    "@repo/backend-common": "workspace:*",
+    "@repo/common": "workspace:*",
+    "@repo/db": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@repo/common":"workspace:*",
-    "@repo/backend-common":"workspace:*",
     "@types/express": "^5.0.0",
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "zod": "^3.24.2",
-    "@repo/db":"workspace:*"
+    "zod": "^3.24.2"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.9",
     "ts-node": "^10.9.2"
-   
   }
 }
