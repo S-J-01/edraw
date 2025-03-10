@@ -49,7 +49,9 @@ app.post('/signup',async (req:Request,res:Response)=>{
     })
 
     const accessToken = jwt.sign(
-        {User:parsedInput.data.username},
+        {User:parsedInput.data.username,
+         id:createdUser.id   
+        },
         accessTokenSecret,
         {expiresIn:'1h'}
     )
@@ -89,8 +91,14 @@ app.post('/login',async (req:Request,res:Response)=>{
         })
         if (!retrievedUser || !(await bcrypt.compare(parsedInput.data.password,retrievedUser.password))){
             res.status(401).json({message:'invalid username or password'})
+            return;
         }
-        const accessToken = jwt.sign({User:parsedInput.data.username},accessTokenSecret,{expiresIn:'1h'})
+        const accessToken = jwt.sign(
+            {User:parsedInput.data.username,
+             id: retrievedUser.id   
+              },accessTokenSecret,
+        {expiresIn:'1h'}
+        ) 
     res.status(200).json({message:'login successful',token:accessToken})
     }catch(err){
         res.status(500).json({message:'database error '})
@@ -106,11 +114,16 @@ app.post('/create-room',middleware,async (req:Request,res:Response)=>{
         res.status(400).json({message:parsedInput.error})
         return;
     }
+    if(!req.id){
+        res.status(400).json({message:' ID not found in request object'})
+        return;
+    }
+   
     try{
         const createdRoom = await prisma.room.create({
             data:{
                 slug:parsedInput.data.slug,
-                adminID:parsedInput.data.adminId
+                adminID:req.id
             }
         })
         res.status(200).json({message:'room created',user:req.username,createdRoom:createdRoom})

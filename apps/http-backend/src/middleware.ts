@@ -17,6 +17,7 @@ export default function middleware(req:Request,res:Response,next:NextFunction){
             const decoded = jwt.verify(token,accessTokenSecret) as CustomPayload;
             console.log('the value of user in decoded is ',decoded.User)
             req.username = decoded.User;
+            req.id=decoded.id;
             next();
         }catch(err){
             res.status(401).json({message:'token not valid'})
