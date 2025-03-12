@@ -42,7 +42,11 @@ const queryParameters = new URLSearchParams(url.split('?')[1]);
 const token = queryParameters.get('token') ?? 'default_token';
 
 
-
+const userID = checkUserStatus(token)
+if (!userID){
+  ws.close()
+  return;
+}
 
 
 
