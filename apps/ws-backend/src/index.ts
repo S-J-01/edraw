@@ -22,7 +22,7 @@ function checkUserStatus(token:string): string | null {
   }
 
   if(!decoded.id){
-    console.log('decoded token does not contain Username')
+    console.log('decoded token does not contain id')
     
     return null;
   }
@@ -36,6 +36,8 @@ function checkUserStatus(token:string): string | null {
 const url = req.url;
 
 if(!url){
+  console.log('url could not be found')
+  ws.close()
   return;
 }
 const queryParameters = new URLSearchParams(url.split('?')[1]);
@@ -44,9 +46,12 @@ const token = queryParameters.get('token') ?? 'default_token';
 
 const userID = checkUserStatus(token)
 if (!userID){
+  console.log('userId could not be extracted')
   ws.close()
   return;
 }
+
+
 
 
 
