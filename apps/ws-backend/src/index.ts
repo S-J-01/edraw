@@ -115,7 +115,33 @@ if (parsedData.requestType==='leave-room'){
    ws.send('room left successfully')
 }
 
-
+if(parsedData.requestType==='chat'){
+  const doesRoomExist = await prisma.room.findUnique({
+    where:{
+      slug:parsedData.roomSlug
+    }
+   })
+  
+   if(!doesRoomExist){
+    ws.send('room does not exist')
+    return;
+   } 
+   const currentUser = connectedUsers.find(user=>user.ws===ws)
+   if (!currentUser){
+    ws.send('unauthenticated user. Chat request failed')
+    return
+   }
+  const isUserSubscribedToRoom = currentUser.rooms.find(room=>room ===parsedData.roomSlug)
+  if(!isUserSubscribedToRoom){
+    ws.send('user not subscribed to room. chat request failed')
+    return
+  }
+  connectedUsers.forEach(user=>{
+    if(user.ws!== ws && user.rooms.includes(parsedData.roomSlug)){
+      user.ws.send(parsedData.chatMessage)
+    }
+  })
+}
 });
  
 
