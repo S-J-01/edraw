@@ -136,6 +136,15 @@ if(parsedData.requestType==='chat'){
     ws.send('user not subscribed to room. chat request failed')
     return
   }
+
+  const chat = await prisma.chat.create({
+    data:{
+      roomId:doesRoomExist.id,
+      message:parsedData.chatMessage,
+      senderId:currentUser.userId
+    }
+  })
+
   connectedUsers.forEach(user=>{
     if(user.ws!== ws && user.rooms.includes(parsedData.roomSlug)){
       user.ws.send(parsedData.chatMessage)

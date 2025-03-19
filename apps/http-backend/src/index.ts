@@ -1,4 +1,4 @@
-import express, {Request,Response} from "express";
+import express, {request, Request,Response} from "express";
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import {signupProp,createRoomSchema} from "@repo/common/zodSchema";
@@ -132,5 +132,55 @@ app.post('/create-room',middleware,async (req:Request,res:Response)=>{
         console.log('database error',error)
     }
    
+})
+
+
+app.get('/chat/:roomId',middleware,async (req:Request,res:Response)=>{
+
+    const roomId = Number(req.params.roomId)
+    if(!roomId){
+        res.status(400).json({message:'room Id not found'})
+        return
+    }
+
+    const previousChats = await prisma.chat.findMany({
+       where:{
+        roomId:roomId
+       },
+        select:{
+            roomId:true,
+            message:true,
+            senderId:true
+        },
+        orderBy:{
+            id:'desc'
+        },
+        take:50
+    })
+
+    res.status(200).json({previousChats:previousChats})
+
+})
+
+app.get('/room/:slug',middleware,async (req:Request,res:Response)=>{
+
+    const slug = req.params.slug
+    if(!slug){
+        res.status(400).json({message:'slug not found'})
+        return
+    }
+
+    const roomId = await prisma.room.findUnique({
+       where:{
+        slug:slug
+       },
+        select:{
+            id:true,
+            
+        }
+    })
+
+    res.status(200).json({roomId:roomId})
+
 })
 app.listen(3001);
