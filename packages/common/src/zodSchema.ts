@@ -7,5 +7,5 @@ export const signupProp = z.object({
 
 export const createRoomSchema = z.object({
     slug: z.string().min(1).max(25),
-    adminId : z.string()
+    
 })

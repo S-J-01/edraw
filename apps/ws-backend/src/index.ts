@@ -3,7 +3,8 @@ import jwt from "jsonwebtoken"
 import dotenv from 'dotenv'
 dotenv.config()
 import {accessTokenSecret} from "@repo/backend-common/config"
-import { prisma } from '@repo/db/client';
+import { prisma ,Room} from '@repo/db/client';
+
 
 console.log(accessTokenSecret)
 const wss = new WebSocketServer({ port: 8080 });
@@ -50,7 +51,7 @@ const token = queryParameters.get('token') ?? 'default_token';
 
 const userID = checkUserStatus(token)
 if (!userID){
-  console.log('userId could not be extracted')
+  console.log('userId could not be extracted. Token invalid')
   ws.close()
   return;
 }
@@ -68,12 +69,18 @@ const parsedData = JSON.parse(stringData)
 // parsedData = {requestType: string, roomSlug:string  , chatMessage?:string}
 //check the parsedData against the zod Schema
 if (parsedData.requestType==='join-room'){
- const doesRoomExist = await prisma.room.findUnique({
+  let doesRoomExist : Room | null
+  try{
+  doesRoomExist = await prisma.room.findUnique({
   where:{
     slug:parsedData.roomSlug
   }
  })
-
+  }catch(err){
+    console.log('database query failed.Server error',err)
+    ws.send('database query failed.Server error')
+    return
+  }
  if(!doesRoomExist){
   ws.send('room does not exist')
   return;
@@ -90,12 +97,18 @@ if (parsedData.requestType==='join-room'){
 
 if (parsedData.requestType==='leave-room'){
 
-  const doesRoomExist = await prisma.room.findUnique({
+  let doesRoomExist: Room | null
+  try{
+   doesRoomExist = await prisma.room.findUnique({
     where:{
       slug:parsedData.roomSlug
     }
    })
-  
+}catch(err){
+  console.log('database query failed. server error')
+  ws.send('database query failed. server error')
+  return
+}
    if(!doesRoomExist){
     ws.send('room does not exist')
     return;
@@ -116,12 +129,18 @@ if (parsedData.requestType==='leave-room'){
 }
 
 if(parsedData.requestType==='chat'){
-  const doesRoomExist = await prisma.room.findUnique({
+  let doesRoomExist:Room | null
+  try{
+  doesRoomExist = await prisma.room.findUnique({
     where:{
       slug:parsedData.roomSlug
     }
    })
-  
+  }catch(err){
+    console.log('database query failed. server error')
+    ws.send('database query failed. server error')
+    return
+  }
    if(!doesRoomExist){
     ws.send('room does not exist')
     return;
@@ -136,7 +155,7 @@ if(parsedData.requestType==='chat'){
     ws.send('user not subscribed to room. chat request failed')
     return
   }
-
+try{
   const chat = await prisma.chat.create({
     data:{
       roomId:doesRoomExist.id,
@@ -144,7 +163,11 @@ if(parsedData.requestType==='chat'){
       senderId:currentUser.userId
     }
   })
-
+}catch(err){
+  console.log('chat saving in database failed. server error')
+  ws.send('chat saving in database failed. server error')
+  return
+}
   connectedUsers.forEach(user=>{
     if(user.ws!== ws && user.rooms.includes(parsedData.roomSlug)){
       user.ws.send(parsedData.chatMessage)
