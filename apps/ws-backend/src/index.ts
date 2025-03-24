@@ -3,7 +3,9 @@ import jwt from "jsonwebtoken"
 import dotenv from 'dotenv'
 dotenv.config()
 import {accessTokenSecret} from "@repo/backend-common/config"
-import { prisma ,Room} from '@repo/db/client';
+import { prisma} from '@repo/db/client';
+import type { Room } from '@repo/db/client';
+
 
 
 console.log(accessTokenSecret)
