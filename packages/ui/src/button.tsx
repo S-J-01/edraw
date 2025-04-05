@@ -1,22 +1,18 @@
-import { ReactNode } from "react"
+'use client'
 
-interface ButtonProps{
-  variant:"primary" | "secondary" | "outline";
-  size:"small" | "large";
+import { ButtonHTMLAttributes, ReactNode } from "react";
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>{
   text: string;
-  icon?:ReactNode;
-  onClick : ()=>void
-}
-const variantStyles ={
-  "primary": "bg-white text-black rounded-full",
-  "secondary":"bg-black text-white rounded-full",
-  "outline" :"bg-black text-white rounded-full border-white"
+  startIcon?:ReactNode;
+  endIcon?:ReactNode
 }
 
-export const Button = (props:ButtonProps)=>{
+
+export const Button = ({text,startIcon,endIcon,...props}:ButtonProps)=>{
   return(
-    <button className={`${variantStyles[props.variant]}`}>
-     {props.text}
+    <button {...props}>
+{startIcon}{text}{endIcon}
     </button>
   )
 }
