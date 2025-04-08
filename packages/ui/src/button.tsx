@@ -1,4 +1,4 @@
-'use client'
+import { cn } from './utils'
 
 import { ButtonHTMLAttributes, ReactNode } from "react";
 
