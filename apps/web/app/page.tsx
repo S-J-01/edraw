@@ -1,5 +1,6 @@
 
 import { Button } from "@repo/ui/button";
+import HeroSection from "../components/HeroSection";
 
 
 
@@ -7,7 +8,7 @@ import { Button } from "@repo/ui/button";
 export default function Home() {
   return (
    <div>
-    
+    <HeroSection/>
 
    </div>
   );
