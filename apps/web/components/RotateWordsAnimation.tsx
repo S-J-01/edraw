@@ -4,8 +4,8 @@ import { AnimatePresence, motion } from "motion/react"
 import { useEffect, useState } from "react"
  
 export function RotateWordsAnimation({
-  text = "Rotate",
-  words = ["Word 1", "Word 2", "Word 3"],
+  text ,
+  words  
 }: {
   text: string
   words: string[]
@@ -19,21 +19,28 @@ setIndex((prevIndex) => (prevIndex + 1) % words.length)
 
 return () => clearInterval(interval)
 }, [])
+const lineHeight = "h-[4.6rem]"
 return (
  
-<div className="text-7xl font-semibold -tracking-4 bg-gradient-to-b from-zinc-200 via-zinc-200 via-[25%] to-zinc-400 inline-block text-transparent bg-clip-text">
+<div className="text-7xl font-semibold -tracking-4 text-black dark:text-white leading-tight">
   
+  <div className={`inline-block align-top ${lineHeight} overflow-hidden`}>
+
+    <span className="inline-block text-right min-w-[28.5rem]">
   <AnimatePresence mode="wait">
-    <motion.p
+    <motion.span
+    className="inline-block"
       key={words[index]}
       initial={{ opacity: 0, y: -40 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 40 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 2.0 }}
     >
       {words[index]}
-    </motion.p>
+    </motion.span>
   </AnimatePresence>
+  </span>
+  </div>
   {' '}{text}
 </div>
 ) }
