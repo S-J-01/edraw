@@ -9,7 +9,7 @@ import ThemeToggle from "./ThemeToggle"
                 EDRAW
             </h1>
 
-            <div className="flex items-center justify-around gap-4 border-2 border-red-500 ">
+            <div className="flex items-center justify-around gap-1 md:gap-4 border-2 border-red-500 ">
                 <ThemeToggle/>
                 <Button text={"Log In"} variant={"secondary"} size={"large"} onClick={()=>alert("login button clicked")} ></Button>
                 <Button text={"Sign Up"} variant={"primary"} size={"large"} onClick={()=>alert("signup button clicked")} ></Button>
